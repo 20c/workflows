@@ -1,0 +1,40 @@
+name: "Install UV and project"
+description: "Install and cache UV"
+author: "@grizz"
+
+inputs:
+  python-version:
+    description: "Python version"
+    required: false
+    default: 3.x
+
+outputs:
+  uv-path:
+    description: "Path to uv environment"
+    value: ${{ steps.get-venv-path.outputs.venv-path }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up python ${{ inputs.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Get Python version
+      shell: bash
+      run: |
+        echo "PYTHON_VERSION=$(python --version | awk '{ print $NF }')" >> $GITHUB_ENV
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+      with:
+        enable-cache: true
+
+    - name: Get virtualenv path
+      shell: bash
+      run: echo "VENV_PATH=$(python -c 'import sys; print(sys.prefix)')" >> $GITHUB_ENV
+
+    - name: Check cache and install dependencies
+      shell: bash
+      run: uv sync --all-extras --dev
