@@ -7,6 +7,10 @@ inputs:
     required: false
     default: 3.x
     type: string
+  install-options:
+    required: false
+    default: ""
+    type: string
 outputs:
   venv-path:
     description: "virtualenv path"
@@ -61,4 +65,4 @@ runs:
     # install dependencies if cache does not exist
     - name: Check cache and install dependencies
       shell: bash
-      run: poetry install --no-interaction
+      run: poetry install --no-interaction ${{ inputs.install-options }}

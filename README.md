@@ -36,6 +36,10 @@ inputs:
     required: false
     default: 3.x
     type: string
+  install-options:
+    required: false
+    default: ""
+    type: string
 outputs:
   venv-path:
     description: "virtualenv path"
